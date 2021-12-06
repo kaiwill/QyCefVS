@@ -123,7 +123,7 @@ $(QtDllPath)\windeployqt.exe $(OutputPath)$(TargetFileName)</Command>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cef\simple_app.h" />
+    <QtMoc Include="cef\simple_app.h" />
     <ClInclude Include="cef\simple_handler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -48,11 +48,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cef\simple_app.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="cef\simple_handler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="cef\simple_app.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
 </Project>

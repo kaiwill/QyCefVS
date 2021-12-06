@@ -2,14 +2,20 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_mainwindow.h"
-
+#include "cef/simple_app.h"
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = Q_NULLPTR);
+    MainWindow(SimpleApp* cefApp,QWidget* parent = Q_NULLPTR);
 
+protected:
+    void resizeEvent(QResizeEvent* event);
+
+private slots:
+    void createBrowserWindow();
 private:
+     SimpleApp*  m_cefApp=NULL;
     Ui::MainWindowClass ui;
 };

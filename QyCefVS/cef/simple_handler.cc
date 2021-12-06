@@ -60,7 +60,6 @@ bool SimpleHandler::DoClose(CefRefPtr<CefBrowser> browser) {
 void SimpleHandler::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
     CEF_REQUIRE_UI_THREAD();
 
-    // Remove from the list of existing browsers.
     BrowserList::iterator bit = browser_list_.begin();
     for (; bit != browser_list_.end(); ++bit) {
         if ((*bit)->IsSame(browser)) {
@@ -74,6 +73,3 @@ void SimpleHandler::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
         CefQuitMessageLoop();
     }
 }
-
-
-

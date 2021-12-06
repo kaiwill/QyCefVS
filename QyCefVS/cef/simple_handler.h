@@ -51,6 +51,12 @@ class SimpleHandler : public CefClient,
       return false;
   }
 
+  HWND getBrowserWindowHandle() {
+      if (!browser_list_.empty()) {
+          return  browser_list_.front()->GetHost()->GetWindowHandle();
+      }
+      return NULL;
+  }
 
  private:
   const bool use_views_;
