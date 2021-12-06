@@ -68,6 +68,12 @@
       <Command>XCOPY $(SolutionDir)libs\cef\bin\release\* $(OutputPath) /s /e /y
 $(QtDllPath)\windeployqt.exe $(OutputPath)$(TargetFileName)</Command>
     </PostBuildEvent>
+    <ClCompile>
+      <BrowseInformation>true</BrowseInformation>
+    </ClCompile>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Link>

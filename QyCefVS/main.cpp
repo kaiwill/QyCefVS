@@ -29,6 +29,8 @@ int main(int argc, char *argv[])
     // CEF 全局设置
     CefSettings settings;
     settings.no_sandbox = true;
+    // 这个设置项将导致CEF在单独的线程上运行Browser的界面，而不是在主线程上。
+    settings.multi_threaded_message_loop = true;
     
   // SimpleApp implements application-level callbacks for the browser process.
   // It will create the first browser instance in OnContextInitialized() after
@@ -38,13 +40,17 @@ int main(int argc, char *argv[])
     // 初始化CEF
     CefInitialize(main_args, settings, app.get(), nullptr);
 
-    // CEF 消息循环
-    CefRunMessageLoop();
+    // 注释 CEF 消息循环，使用QT 消息循环
+    //CefRunMessageLoop();
+    // 开启 QT 消息循环
+    QApplication a(argc, argv);
+    MainWindow w;
+    w.show();
 
+    int ret = a.exec();
     // Shut down CEF.
     CefShutdown();
-
-    return 0;
+    return ret;
 }
 
 
