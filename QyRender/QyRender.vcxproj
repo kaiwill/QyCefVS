@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{92180DDB-480D-4423-B47E-76193BE95CA3}</ProjectGuid>
+    <ProjectGuid>{5F432088-B8EB-41CD-BEF2-B7BA375552A6}</ProjectGuid>
     <Keyword>QtVS_v304</Keyword>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'">10.0.19041.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'">10.0.19041.0</WindowsTargetPlatformVersion>
@@ -32,12 +32,12 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'" Label="QtSettings">
     <QtInstall>5.15.2_msvc2019</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'" Label="QtSettings">
     <QtInstall>5.15.2_msvc2019</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>core</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
@@ -58,34 +58,11 @@
     <IncludePath>$(SolutionDir)\libs\cef;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'">
-    <IncludePath>$(SolutionDir)\libs\cef;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Link>
       <AdditionalDependencies>$(SolutionDir)\libs\cef\lib\debug\libcef.lib;$(SolutionDir)\libs\cef\lib\debug\libcef_dll_wrapper.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>XCOPY $(SolutionDir)libs\cef\bin\release\* $(OutputPath) /s /e /y
-$(QtDllPath)\windeployqt.exe $(OutputPath)$(TargetFileName)</Command>
-    </PostBuildEvent>
-    <ClCompile>
-      <BrowseInformation>true</BrowseInformation>
-    </ClCompile>
-    <Bscmake>
-      <PreserveSbr>true</PreserveSbr>
-    </Bscmake>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Link>
-      <AdditionalDependencies>$(SolutionDir)\libs\cef\lib\release\libcef.lib;$(SolutionDir)\libs\cef\lib\release\libcef_dll_wrapper.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-    <PostBuildEvent>
-      <Command>XCOPY $(SolutionDir)libs\cef\bin\debug\* $(OutputPath) /s /e /y
-$(QtDllPath)\windeployqt.exe $(OutputPath)$(TargetFileName)</Command>
-    </PostBuildEvent>
-    <Manifest>
-      <AdditionalManifestFiles>$(ProjectDir)compatibility.manifest %(AdditionalManifestFiles)</AdditionalManifestFiles>
-    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'" Label="Configuration">
     <ClCompile>
@@ -109,22 +86,16 @@ $(QtDllPath)\windeployqt.exe $(OutputPath)$(TargetFileName)</Command>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <QtRcc Include="mainwindow.qrc" />
-    <QtUic Include="mainwindow.ui" />
-    <QtMoc Include="mainwindow.h" />
-    <ClCompile Include="cef\simple_app.cc" />
-    <ClCompile Include="cef\simple_handler.cc" />
-    <ClCompile Include="mainwindow.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="QyAppRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="cef\simple_app.h" />
-    <ClInclude Include="cef\simple_handler.h" />
+    <ClInclude Include="QyAppRenderer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
