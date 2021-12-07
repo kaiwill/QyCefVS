@@ -15,6 +15,7 @@ protected:
 
 private slots:
     void createBrowserWindow();
+    void toogleDevToolsWindow(CefBrowser* browser);
 private:
      SimpleApp*  m_cefApp=NULL;
     Ui::MainWindowClass ui;

@@ -96,7 +96,7 @@ $(QtDllPath)\windeployqt.exe $(OutputPath)$(TargetFileName)</Command>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -124,7 +124,7 @@ $(QtDllPath)\windeployqt.exe $(OutputPath)$(TargetFileName)</Command>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="cef\simple_app.h" />
-    <ClInclude Include="cef\simple_handler.h" />
+    <QtMoc Include="cef\simple_handler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

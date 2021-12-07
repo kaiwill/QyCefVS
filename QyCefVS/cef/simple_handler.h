@@ -8,8 +8,10 @@
 #include "include/cef_client.h"
 #include <list>
 #include "include/wrapper/cef_helpers.h"
-class SimpleHandler : public CefClient,
-                      public CefLifeSpanHandler {
+#include "QObject"
+class SimpleHandler : public CefClient
+                      ,public CefLifeSpanHandler
+                      ,public CefKeyboardHandler {
  public:
   explicit SimpleHandler(bool use_views);
   ~SimpleHandler();
@@ -58,13 +60,23 @@ class SimpleHandler : public CefClient,
       return NULL;
   }
 
+
+  //CefKeyboardHandler
+  virtual CefRefPtr<CefKeyboardHandler> GetKeyboardHandler() OVERRIDE 
+  { 
+      return this; 
+  }
+  virtual bool OnPreKeyEvent(CefRefPtr<CefBrowser> browser,
+      const CefKeyEvent& event,
+      CefEventHandle os_event,
+      bool* is_keyboard_shortcut);
+
  private:
   const bool use_views_;
 
   // List of existing browser windows. Only accessed on the CEF UI thread.
   typedef std::list<CefRefPtr<CefBrowser>> BrowserList;
   BrowserList browser_list_;
-
   bool is_closing_;
 
   IMPLEMENT_REFCOUNTING(SimpleHandler);

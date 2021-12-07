@@ -20,7 +20,7 @@ SimpleHandler* g_instance = nullptr;
 }  // namespace
 
 SimpleHandler::SimpleHandler(bool use_views)
-    : use_views_(use_views), is_closing_(false) {
+    : use_views_(use_views), is_closing_(false){
   DCHECK(!g_instance);
   g_instance = this;
 }
@@ -72,4 +72,23 @@ void SimpleHandler::OnBeforeClose(CefRefPtr<CefBrowser> browser) {
         // All browser windows have closed. Quit the application message loop.
         CefQuitMessageLoop();
     }
+}
+
+bool SimpleHandler::OnPreKeyEvent(CefRefPtr<CefBrowser> browser, const CefKeyEvent& event, CefEventHandle os_event, bool* is_keyboard_shortcut)
+{
+
+    if (event.type == KEYEVENT_RAWKEYDOWN) {
+        switch (event.windows_key_code) {
+        case VK_F5: //刷新页面
+            browser->Reload();
+            return true;
+        case VK_F12: // 打开浏览器开发者工具
+                CefWindowInfo windowInfo;
+                CefBrowserSettings settings;
+                windowInfo.SetAsPopup(NULL, "Dev Tools");
+                browser->GetHost()->ShowDevTools(windowInfo, this, settings, CefPoint());
+            return true;
+        }
+    }
+    return false;
 }
