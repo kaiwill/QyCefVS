@@ -1,38 +1,40 @@
-#include "mainwindow.h"
+ï»¿#include "mainwindow.h"
 #include <QtWidgets/QApplication>
 #include "include/cef_command_line.h"
 #include "include/cef_sandbox_win.h"
 #include "cef/simple_app.h"
 #include <qdebug.h>
-int main(int argc, char *argv[])
+#include "log.h"
+int main(int argc, char* argv[])
 {
-    // Enable High-DPI support on Windows 7 or newer.
-    CefEnableHighDPISupport();
-    // Í¨¹ıGetModuleHandle »ñÈ¡ HINSTANCE
-    HINSTANCE hInstance = GetModuleHandle(nullptr);
-   
-// ¿ªÆô QT ÏûÏ¢Ñ­»·
-    SimpleApp* cefApp=new SimpleApp;
-    QApplication a(argc, argv);
-    //CEF ÃüÁîĞĞ²ÎÊı
-    CefMainArgs main_args(hInstance);
-    CefSettings settings;
-    settings.no_sandbox = true;
-    settings.multi_threaded_message_loop = true;
+	// Enable High-DPI support on Windows 7 or newer.
+	CefEnableHighDPISupport();
+	// é€šè¿‡GetModuleHandle è·å– HINSTANCE
+	HINSTANCE hInstance = GetModuleHandle(nullptr);
 
-    //·ÖÀëµÄÖ´ĞĞÌå
-    QString executerPath = QApplication::applicationDirPath().append("\\QyRender.exe");
-    CefString(&settings.browser_subprocess_path).FromASCII(executerPath.toStdString().c_str());
+	// å¼€å¯ QT æ¶ˆæ¯å¾ªç¯
+	SimpleApp* cefApp = new SimpleApp;
+	QApplication a(argc, argv);
+	qInstallMessageHandler(outputMessage); // æ—¥å¿—
+	//CEF å‘½ä»¤è¡Œå‚æ•°
+	CefMainArgs main_args(hInstance);
+	CefSettings settings;
+	settings.no_sandbox = true;
+	settings.multi_threaded_message_loop = true;
 
-    MainWindow w(cefApp, nullptr);
-    w.show();
-    CefRefPtr<SimpleApp> app(cefApp);
-    // ³õÊ¼»¯CEF
-    CefInitialize(main_args, settings, app.get(), nullptr);
-    int ret = a.exec();
-    // Shut down CEF.
-    CefShutdown();
-    return ret;
+	//åˆ†ç¦»çš„æ‰§è¡Œä½“
+	QString executerPath = QApplication::applicationDirPath().append("\\QyRender.exe");
+	CefString(&settings.browser_subprocess_path).FromASCII(executerPath.toStdString().c_str());
+
+	MainWindow w(cefApp, nullptr);
+	w.show();
+	CefRefPtr<SimpleApp> app(cefApp);
+	// åˆå§‹åŒ–CEF
+	CefInitialize(main_args, settings, app.get(), nullptr);
+	int ret = a.exec();
+	// Shut down CEF.
+	CefShutdown();
+	return ret;
 }
 
 

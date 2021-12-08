@@ -124,7 +124,10 @@ $(QtDllPath)\windeployqt.exe $(OutputPath)$(TargetFileName)</Command>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="cef\simple_app.h" />
-    <ClInclude Include="cef\simple_handler.h" />
+    <QtMoc Include="cef\simple_handler.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="log.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

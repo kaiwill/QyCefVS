@@ -95,6 +95,7 @@
     <ClCompile Include="QyAppRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="log.h" />
     <ClInclude Include="QyAppRenderer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,4 +1,4 @@
-// Copyright (c) 2013 The Chromium Embedded Framework Authors. All rights
+ï»¿// Copyright (c) 2013 The Chromium Embedded Framework Authors. All rights
 // reserved. Use of this source code is governed by a BSD-style license that
 // can be found in the LICENSE file.
 
@@ -9,77 +9,86 @@
 #include <list>
 #include "include/wrapper/cef_helpers.h"
 #include "QObject"
-class SimpleHandler : public CefClient
-                      ,public CefLifeSpanHandler
-                      ,public CefKeyboardHandler {
- public:
-  explicit SimpleHandler(bool use_views);
-  ~SimpleHandler();
+class SimpleHandler :public QObject, public CefClient
+	, public CefLifeSpanHandler
+	, public CefKeyboardHandler {
+	Q_OBJECT
+public:
+	explicit SimpleHandler(bool use_views);
+	~SimpleHandler();
 
-  // Provide access to the single global instance of this object.
-  static SimpleHandler* GetInstance();
+	// Provide access to the single global instance of this object.
+	static SimpleHandler* GetInstance();
 
-  virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE {
-      return this;
-  }
+	virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE {
+		return this;
+	}
 
-  // CefLifeSpanHandler methods:
-  virtual void OnAfterCreated(CefRefPtr<CefBrowser> browser) OVERRIDE;
-  virtual bool DoClose(CefRefPtr<CefBrowser> browser) OVERRIDE;
-  virtual void OnBeforeClose(CefRefPtr<CefBrowser> browser) OVERRIDE;
-  // ÖØĞ´ËüµÄÄ¿µÄÊÇÎªÁËÔÚµã»÷Á´½ÓµÄÊ±ºòÔÚÍ¬Ò»¸ö´°¿Ú´ò¿ªÁ¬½Ó¡£
-  // Ä¬ÈÏ·µ»ØµÄÊÇ false£¬ÕâÀïÔÚÖ÷frameÖĞ¼ÓÔØµØÖ·£¬È»ºó·µ»Øtrue
-  virtual bool OnBeforePopup(CefRefPtr<CefBrowser> browser, //ä¯ÀÀÆ÷¶ÔÏó
-      CefRefPtr<CefFrame> frame,
-      const CefString& target_url, //Òª´ò¿ªµÄµØÖ·
-      const CefString& target_frame_name,
-      WindowOpenDisposition target_disposition,
-      bool user_gesture,
-      const CefPopupFeatures& popupFeatures,
-      CefWindowInfo& windowInfo,
-      CefRefPtr<CefClient>& client,
-      CefBrowserSettings& settings,
-      CefRefPtr<CefDictionaryValue>& extra_info,
-      bool* no_javascript_access) {
-      
-      CEF_REQUIRE_UI_THREAD();
+	// CefLifeSpanHandler methods:
+	virtual void OnAfterCreated(CefRefPtr<CefBrowser> browser) OVERRIDE;
+	virtual bool DoClose(CefRefPtr<CefBrowser> browser) OVERRIDE;
+	virtual void OnBeforeClose(CefRefPtr<CefBrowser> browser) OVERRIDE;
+	// é‡å†™å®ƒçš„ç›®çš„æ˜¯ä¸ºäº†åœ¨ç‚¹å‡»é“¾æ¥çš„æ—¶å€™åœ¨åŒä¸€ä¸ªçª—å£æ‰“å¼€è¿æ¥ã€‚
+	// é»˜è®¤è¿”å›çš„æ˜¯ falseï¼Œè¿™é‡Œåœ¨ä¸»frameä¸­åŠ è½½åœ°å€ï¼Œç„¶åè¿”å›true
+	virtual bool OnBeforePopup(CefRefPtr<CefBrowser> browser, //æµè§ˆå™¨å¯¹è±¡
+		CefRefPtr<CefFrame> frame,
+		const CefString& target_url, //è¦æ‰“å¼€çš„åœ°å€
+		const CefString& target_frame_name,
+		WindowOpenDisposition target_disposition,
+		bool user_gesture,
+		const CefPopupFeatures& popupFeatures,
+		CefWindowInfo& windowInfo,
+		CefRefPtr<CefClient>& client,
+		CefBrowserSettings& settings,
+		CefRefPtr<CefDictionaryValue>& extra_info,
+		bool* no_javascript_access) {
 
-      if (!target_url.empty())
-      {
-          //»ñÈ¡ä¯ÀÀÆ÷¶ÔÏóÖĞµÄ Ö÷frame¶ÔÏó£¬È»ºó¼ÓÔØurl
-          browser->GetMainFrame()->LoadURL(target_url);
-          return true;
-      }
-      return false;
-  }
+		CEF_REQUIRE_UI_THREAD();
 
-  HWND getBrowserWindowHandle() {
-      if (!browser_list_.empty()) {
-          return  browser_list_.front()->GetHost()->GetWindowHandle();
-      }
-      return NULL;
-  }
+		if (!target_url.empty())
+		{
+			//è·å–æµè§ˆå™¨å¯¹è±¡ä¸­çš„ ä¸»frameå¯¹è±¡ï¼Œç„¶ååŠ è½½url
+			browser->GetMainFrame()->LoadURL(target_url);
+			return true;
+		}
+		return false;
+	}
+
+	HWND getBrowserWindowHandle() {
+		if (!browser_list_.empty()) {
+			return  browser_list_.front()->GetHost()->GetWindowHandle();
+		}
+		return NULL;
+	}
 
 
-  //CefKeyboardHandler
-  virtual CefRefPtr<CefKeyboardHandler> GetKeyboardHandler() OVERRIDE 
-  { 
-      return this; 
-  }
-  virtual bool OnPreKeyEvent(CefRefPtr<CefBrowser> browser,
-      const CefKeyEvent& event,
-      CefEventHandle os_event,
-      bool* is_keyboard_shortcut);
+	//CefKeyboardHandler
+	virtual CefRefPtr<CefKeyboardHandler> GetKeyboardHandler() OVERRIDE
+	{
+		return this;
+	}
+	virtual bool OnPreKeyEvent(CefRefPtr<CefBrowser> browser,
+		const CefKeyEvent& event,
+		CefEventHandle os_event,
+		bool* is_keyboard_shortcut);
 
- private:
-  const bool use_views_;
+	virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
+		CefRefPtr<CefFrame> frame,
+		CefProcessId source_process,
+		CefRefPtr<CefProcessMessage> message);
 
-  // List of existing browser windows. Only accessed on the CEF UI thread.
-  typedef std::list<CefRefPtr<CefBrowser>> BrowserList;
-  BrowserList browser_list_;
-  bool is_closing_;
+signals:
+	void onReceiveRendererProccessMessasge(QString title, int width, int height);
 
-  IMPLEMENT_REFCOUNTING(SimpleHandler);
+private:
+	const bool use_views_;
+
+	// List of existing browser windows. Only accessed on the CEF UI thread.
+	typedef std::list<CefRefPtr<CefBrowser>> BrowserList;
+	BrowserList browser_list_;
+	bool is_closing_;
+
+	IMPLEMENT_REFCOUNTING(SimpleHandler);
 };
 
 #endif  // CEF_TESTS_CEFSIMPLE_SIMPLE_HANDLER_H_

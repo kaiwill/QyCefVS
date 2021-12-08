@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <qobject.h>
 #include "include/cef_app.h"
 
@@ -6,13 +6,23 @@ class QyAppRenderer :public CefApp, public CefRenderProcessHandler {
 public:
 	QyAppRenderer();
 
-	//ÖØĞ´CefApp ÖĞµÄGetRenderProcessHandler·½·¨
-	CefRefPtr<CefRenderProcessHandler> GetRenderProcessHandler() OVERRIDE{
+	//é‡å†™CefApp ä¸­çš„GetRenderProcessHandleræ–¹æ³•
+	CefRefPtr<CefRenderProcessHandler> GetRenderProcessHandler() OVERRIDE {
 		return this;
 	}
-	//ÊµÏÖ CefRenderProcessHandler ½Ó¿ÚÖĞµÄ·½·¨
+	//å®ç° CefRenderProcessHandler æ¥å£ä¸­çš„æ–¹æ³•
 	void OnBrowserCreated(CefRefPtr<CefBrowser> browser,
 		CefRefPtr<CefDictionaryValue> extra_info) OVERRIDE;
+
+	//
+	void QyAppRenderer::OnContextCreated(CefRefPtr<CefBrowser> browser,
+		CefRefPtr<CefFrame> frame,
+		CefRefPtr<CefV8Context> context) OVERRIDE;
+
+	bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
+		CefRefPtr<CefFrame> frame,
+		CefProcessId source_process,
+		CefRefPtr<CefProcessMessage> message);
 
 private:
 	// Include the default reference counting implementation.

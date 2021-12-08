@@ -51,9 +51,12 @@
     <QtMoc Include="cef\simple_app.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="cef\simple_handler.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cef\simple_handler.h">
+    <ClInclude Include="log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

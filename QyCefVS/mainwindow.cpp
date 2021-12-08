@@ -1,58 +1,65 @@
-#include "mainwindow.h"
+ï»¿#include "mainwindow.h"
 #include "cef/simple_handler.h"
 #include "QDesktopWidget"
 #include "QDockWidget"
-MainWindow::MainWindow(SimpleApp* cefApp,QWidget *parent)
-    : QMainWindow(parent),m_cefApp(cefApp)
+#include <QDialog>
+MainWindow::MainWindow(SimpleApp* cefApp, QWidget* parent)
+	: QMainWindow(parent), m_cefApp(cefApp)
 {
-    ui.setupUi(this);
-    // µ±SimpleApp ÖĞ»Øµ÷OnctextInitializedµÄÊ±ºò£¬Í¨Öª Ö÷´°Ìå´´½¨ä¯ÀÀÆ÷´°¿Ú£¬²¢Ç¶Èëµ½Ö÷´°¿ÚÖĞ
-    connect(m_cefApp, &SimpleApp::onCefOnctextInitialized, this, &MainWindow::createBrowserWindow);
+	ui.setupUi(this);
+	// å½“SimpleApp ä¸­å›è°ƒOnctextInitializedçš„æ—¶å€™ï¼Œé€šçŸ¥ ä¸»çª—ä½“åˆ›å»ºæµè§ˆå™¨çª—å£ï¼Œå¹¶åµŒå…¥åˆ°ä¸»çª—å£ä¸­
+	connect(m_cefApp, &SimpleApp::onCefOnctextInitialized, this, &MainWindow::createBrowserWindow);
 }
 
 /// <summary>
-/// ´´½¨ä¯ÀÀÆ÷´°Ìå
+/// åˆ›å»ºæµè§ˆå™¨çª—ä½“
 /// </summary>
 void MainWindow::createBrowserWindow() {
 
-    CefRefPtr<SimpleHandler> handler(new SimpleHandler(false));
-  // ä¯ÀÀÆ÷ÅäÖÃ£¬
-  CefBrowserSettings browser_settings;
-  // Òª´ò¿ªµÄÍøÖ·
-  std::string url= "https://www.baidu.com";
-  // ä¯ÀÀÆ÷´°¿ÚĞÅÏ¢
-  CefWindowInfo window_info;
-  
-  //window_info.SetAsPopup(NULL, "cefsimple");
-  // »ñÈ¡Ç¶Èë´°ÌåµÄ¾ä±ú
-    
+	CefRefPtr<SimpleHandler> handler(new SimpleHandler(false));
+	// æµè§ˆå™¨é…ç½®ï¼Œ
+	CefBrowserSettings browser_settings;
+	// è¦æ‰“å¼€çš„ç½‘å€
+	std::string url = "https://www.baidu.com";
+	// æµè§ˆå™¨çª—å£ä¿¡æ¯
+	CefWindowInfo window_info;
 
-  CefWindowInfo cefWndInfo;
-  RECT winRect;
-  QRect qtRect = this->rect();
-  winRect.left = qtRect.left();
-  winRect.top = qtRect.top();
-  winRect.right = qtRect.right();
-  winRect.bottom = qtRect.bottom();
-  HWND wnd = (HWND)centralWidget()->winId();
-  window_info.SetAsChild(wnd, winRect);
-    // Create the first browser window.
-    CefBrowserHost::CreateBrowser(window_info, handler, url, browser_settings,
-                                  nullptr, nullptr);
+	//window_info.SetAsPopup(NULL, "cefsimple");
+	// è·å–åµŒå…¥çª—ä½“çš„å¥æŸ„
+
+
+	CefWindowInfo cefWndInfo;
+	RECT winRect;
+	QRect qtRect = this->rect();
+	winRect.left = qtRect.left();
+	winRect.top = qtRect.top();
+	winRect.right = qtRect.right();
+	winRect.bottom = qtRect.bottom();
+	HWND wnd = (HWND)centralWidget()->winId();
+	window_info.SetAsChild(wnd, winRect);
+	// Create the first browser window.
+	CefBrowserHost::CreateBrowser(window_info, handler, url, browser_settings,
+		nullptr, nullptr);
+
+	connect(handler.get(), &SimpleHandler::onReceiveRendererProccessMessasge, this, &MainWindow::onReceiveRendererProccessMessasge);
 }
 void MainWindow::resizeEvent(QResizeEvent* event)
 {
-    if (SimpleHandler::GetInstance()) {
-        HWND wnd = SimpleHandler::GetInstance()->getBrowserWindowHandle();
-        if (wnd) {
-            QRect qtRect = this->centralWidget()->rect();
-            ::MoveWindow(wnd, qtRect.x(), qtRect.y(), qtRect.width(), qtRect.height(), true);
-        }
-    }
+	if (SimpleHandler::GetInstance()) {
+		HWND wnd = SimpleHandler::GetInstance()->getBrowserWindowHandle();
+		if (wnd) {
+			QRect qtRect = this->centralWidget()->rect();
+			::MoveWindow(wnd, qtRect.x(), qtRect.y(), qtRect.width(), qtRect.height(), true);
+		}
+	}
 }
 
-void MainWindow::toogleDevToolsWindow(CefBrowser* browser)
+void MainWindow::onReceiveRendererProccessMessasge(QString title, int width, int height)
 {
-    //m_dev_tools->show();
-   
+	QDialog* subWin = new QDialog(this);
+	subWin->setWindowTitle(title);
+	subWin->setFixedWidth(width);
+	subWin->setFixedHeight(height);
+	subWin->show();
+
 }

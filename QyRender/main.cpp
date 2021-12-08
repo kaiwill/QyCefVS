@@ -1,18 +1,21 @@
-#include <QtCore/QCoreApplication>
+ï»¿#include <QtCore/QCoreApplication>
 #include "include/cef_app.h"
 #include "include/cef_command_line.h"
 #include "QyAppRenderer.h"
-int main(int argc, char *argv[])
+#include "log.h"
+int main(int argc, char* argv[])
 {
-    HINSTANCE hInstance = GetModuleHandle(nullptr);
-    //¹¹ÔìÃüÁîĞĞ
-    CefMainArgs main_args(hInstance);
+	QCoreApplication a(argc, argv);
+	qInstallMessageHandler(outputMessage);
+	HINSTANCE hInstance = GetModuleHandle(nullptr);
+	//æ„é€ å‘½ä»¤è¡Œ
+	CefMainArgs main_args(hInstance);
 
-    // Optional implementation of the CefApp interface.
-    // ¿ÉÑ¡ÔñĞÔµØÊµÏÖCefApp½Ó¿Ú
-    CefRefPtr<QyAppRenderer> app(new QyAppRenderer);
+	// Optional implementation of the CefApp interface.
+	// å¯é€‰æ‹©æ€§åœ°å®ç°CefAppæ¥å£
+	CefRefPtr<QyAppRenderer> app(new QyAppRenderer);
 
-    // Execute the sub-process logic. This will block until the sub-process should exit.
-    // Ö´ĞĞ×Ó½ø³ÌÂß¼­£¬´ËÊ±»á¶ÂÈûÖ±µ½×Ó½ø³ÌÍË³ö¡£
-    return CefExecuteProcess(main_args, app.get(),nullptr);
+	// Execute the sub-process logic. This will block until the sub-process should exit.
+	// æ‰§è¡Œå­è¿›ç¨‹é€»è¾‘ï¼Œæ­¤æ—¶ä¼šå µå¡ç›´åˆ°å­è¿›ç¨‹é€€å‡ºã€‚
+	return CefExecuteProcess(main_args, app.get(), nullptr);
 }
