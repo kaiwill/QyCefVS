@@ -17,5 +17,9 @@ void SimpleApp::OnContextInitialized() {
 	// 发出信号
 	emit onCefOnctextInitialized();
 }
-
+void SimpleApp::OnBeforeCommandLineProcessing(
+	const CefString& process_type,
+	CefRefPtr<CefCommandLine> command_line) {
+	command_line->AppendSwitch("--disable-web-security");//关闭同源策略
+}
 

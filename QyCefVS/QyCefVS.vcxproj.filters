@@ -60,4 +60,10 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\index.html" />
+    <None Include="resources\js\index.js" />
+    <None Include="resources\css\index.css" />
+    <None Include="resources\js\jquery-3.6.0.min.js" />
+  </ItemGroup>
 </Project>

@@ -66,6 +66,7 @@
     </Link>
     <PostBuildEvent>
       <Command>XCOPY $(SolutionDir)libs\cef\bin\release\* $(OutputPath) /s /e /y
+XCOPY $(ProjectDir)resources $(OutputPath)resources\ /s /e /y
 $(QtDllPath)\windeployqt.exe $(OutputPath)$(TargetFileName)</Command>
     </PostBuildEvent>
     <ClCompile>
@@ -96,7 +97,7 @@ $(QtDllPath)\windeployqt.exe $(OutputPath)$(TargetFileName)</Command>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -128,6 +129,12 @@ $(QtDllPath)\windeployqt.exe $(OutputPath)$(TargetFileName)</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="log.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\css\index.css" />
+    <None Include="resources\index.html" />
+    <None Include="resources\js\index.js" />
+    <None Include="resources\js\jquery-3.6.0.min.js" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

@@ -3,6 +3,7 @@
 #include "QDesktopWidget"
 #include "QDockWidget"
 #include <QDialog>
+#include <QDir>
 MainWindow::MainWindow(SimpleApp* cefApp, QWidget* parent)
 	: QMainWindow(parent), m_cefApp(cefApp)
 {
@@ -19,8 +20,13 @@ void MainWindow::createBrowserWindow() {
 	CefRefPtr<SimpleHandler> handler(new SimpleHandler(false));
 	// 浏览器配置，
 	CefBrowserSettings browser_settings;
+	//browser_settings.universal_access_from_file_urls = STATE_DISABLED;
+	//运行目录
+	QDir dir = QCoreApplication::applicationDirPath();
+	QString uri = QDir::toNativeSeparators(dir.filePath("resources/index.html"));
 	// 要打开的网址
-	std::string url = "https://www.baidu.com";
+	//std::string url = "https://www.baidu.com";
+	std::string url = uri.toStdString();
 	// 浏览器窗口信息
 	CefWindowInfo window_info;
 
@@ -56,10 +62,10 @@ void MainWindow::resizeEvent(QResizeEvent* event)
 
 void MainWindow::onReceiveRendererProccessMessasge(QString title, int width, int height)
 {
-	QDialog* subWin = new QDialog(this);
+	/*QDialog* subWin = new QDialog(this);
 	subWin->setWindowTitle(title);
 	subWin->setFixedWidth(width);
 	subWin->setFixedHeight(height);
-	subWin->show();
+	subWin->show();*/
 
 }
