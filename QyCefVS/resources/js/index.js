@@ -1,10 +1,38 @@
 
 
+
+if (window.appEnv) {
+    console.log(window.appEnv);
+}
+
+console.log(app);
 window.onload = () => {
-    $("#ajaxTest").click(() => {
-        $.get("http://127.0.0.1/user.json", function (data) {
-            let info = "姓名：" + data.user + " 年龄:" + data.age;
-            $("#info").html(info);
-        })
-    })
+    /* $("#btnEncrypt").click(() => {
+         var result = appEnv.encrypt($("#msg").val());
+         $("#msgEncryptResult").val(result);
+     });
+ 
+     $("#btnDncrypt").click(() => {
+         var result = appEnv.decrypt($("#msgEncryptResult").val());
+         $("#dncryptInfo").html("解密结果:" + result);
+     });
+ */
+
+    $("#btnEncrypt").click(() => {
+        var result = app.encrypt($("#msg").val());
+        $("#msgEncryptResult").val(result);
+    });
+
+    $("#btnDncrypt").click(() => {
+        var result = app.decrypt($("#msgEncryptResult").val());
+        $("#dncryptInfo").html("解密结果:" + result);
+    });
+
+    $("#btnTestSayHello").click(() => {
+        app.sayHello((data) => {
+            console.log(data);
+        });
+    });
+
+
 }

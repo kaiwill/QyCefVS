@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>extention_js.js</file>
+    </qresource>
+</RCC>

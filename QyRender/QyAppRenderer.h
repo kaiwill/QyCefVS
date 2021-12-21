@@ -14,10 +14,13 @@ public:
 	void OnBrowserCreated(CefRefPtr<CefBrowser> browser,
 		CefRefPtr<CefDictionaryValue> extra_info) OVERRIDE;
 
+	void OnWebKitInitialized() OVERRIDE;
 	//
 	void QyAppRenderer::OnContextCreated(CefRefPtr<CefBrowser> browser,
 		CefRefPtr<CefFrame> frame,
 		CefRefPtr<CefV8Context> context) OVERRIDE;
+
+
 
 	bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
 		CefRefPtr<CefFrame> frame,

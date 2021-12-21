@@ -10,6 +10,7 @@ MainWindow::MainWindow(SimpleApp* cefApp, QWidget* parent)
 	ui.setupUi(this);
 	// 当SimpleApp 中回调OnctextInitialized的时候，通知 主窗体创建浏览器窗口，并嵌入到主窗口中
 	connect(m_cefApp, &SimpleApp::onCefOnctextInitialized, this, &MainWindow::createBrowserWindow);
+	ui.mainToolBar->setVisible(false);
 }
 
 /// <summary>
