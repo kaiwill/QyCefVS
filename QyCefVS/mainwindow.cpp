@@ -1,11 +1,14 @@
-﻿#include "mainwindow.h"
+﻿#pragma execution_character_set("UTF-8")
+#include "mainwindow.h"
 #include "cef/simple_handler.h"
 #include "QDesktopWidget"
 #include "QDockWidget"
 #include <QDialog>
 #include <QDir>
+#include <QFileDialog>
+#include <QDebug>
 MainWindow::MainWindow(SimpleApp* cefApp, QWidget* parent)
-	: QMainWindow(parent), m_cefApp(cefApp)
+	: QMainWindow(parent), m_cefApp(cefApp), m_cef_query_handler(new CefQueryHandler)
 {
 	ui.setupUi(this);
 	// 当SimpleApp 中回调OnctextInitialized的时候，通知 主窗体创建浏览器窗口，并嵌入到主窗口中
@@ -18,7 +21,7 @@ MainWindow::MainWindow(SimpleApp* cefApp, QWidget* parent)
 /// </summary>
 void MainWindow::createBrowserWindow() {
 
-	CefRefPtr<SimpleHandler> handler(new SimpleHandler(false));
+	CefRefPtr<SimpleHandler> handler(new SimpleHandler(false, m_cef_query_handler));
 	// 浏览器配置，
 	CefBrowserSettings browser_settings;
 	//browser_settings.universal_access_from_file_urls = STATE_DISABLED;
@@ -49,6 +52,8 @@ void MainWindow::createBrowserWindow() {
 		nullptr, nullptr);
 
 	connect(handler.get(), &SimpleHandler::onReceiveRendererProccessMessasge, this, &MainWindow::onReceiveRendererProccessMessasge);
+	// 连接 CefQueryHandler中的onReadFile信号
+	connect(m_cef_query_handler, &CefQueryHandler::onReadFile, this, &MainWindow::onReadFile);
 }
 void MainWindow::resizeEvent(QResizeEvent* event)
 {
@@ -69,4 +74,24 @@ void MainWindow::onReceiveRendererProccessMessasge(QString title, int width, int
 	subWin->setFixedHeight(height);
 	subWin->show();*/
 
+}
+
+//读取文件
+void MainWindow::onReadFile(qint64 query_id) {
+	qDebug() << "mainWindow========onReadFile";
+	QString fileName = QFileDialog::getOpenFileName(NULL, "文件对话框", "F:", "文本文件(*txt)");
+	QFile file(fileName);
+	if (file.exists()) { // 如果文件存在
+		// 读取文件内容
+		if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+			QString content = file.readAll();
+			file.close();
+			//int errorCode, QString fileContent, int64 query_id
+			//成功情况下回传数据，errorCode是 0
+			m_cef_query_handler->handleTextFileContent(0, content, query_id);
+			return;
+		}
+	}
+	//失败情况下回传数据，errorCode是 -1
+	m_cef_query_handler->handleTextFileContent(-1, "读取文件失败", query_id);
 }

@@ -8,13 +8,16 @@
 #include "include/cef_client.h"
 #include <list>
 #include "include/wrapper/cef_helpers.h"
+#include "include/wrapper/cef_message_router.h"
+#include "../cef_query_handler.h"
 #include "QObject"
 class SimpleHandler :public QObject, public CefClient
 	, public CefLifeSpanHandler
-	, public CefKeyboardHandler {
+	, public CefKeyboardHandler
+	, public CefRequestHandler {
 	Q_OBJECT
 public:
-	explicit SimpleHandler(bool use_views);
+	explicit SimpleHandler(bool use_views, CefQueryHandler* m_cef_query_handler);
 	~SimpleHandler();
 
 	// Provide access to the single global instance of this object.
@@ -23,6 +26,7 @@ public:
 	virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE {
 		return this;
 	}
+	CefRefPtr<CefRequestHandler> GetRequestHandler() override { return this; }
 
 	// CefLifeSpanHandler methods:
 	virtual void OnAfterCreated(CefRefPtr<CefBrowser> browser) OVERRIDE;
@@ -32,9 +36,9 @@ public:
 	// 默认返回的是 false，这里在主frame中加载地址，然后返回true
 	virtual bool OnBeforePopup(CefRefPtr<CefBrowser> browser, //浏览器对象
 		CefRefPtr<CefFrame> frame,
-		const CefString& target_url, //要打开的地址
+		const CefString& target_url,
 		const CefString& target_frame_name,
-		WindowOpenDisposition target_disposition,
+		CefLifeSpanHandler::WindowOpenDisposition target_disposition,
 		bool user_gesture,
 		const CefPopupFeatures& popupFeatures,
 		CefWindowInfo& windowInfo,
@@ -75,7 +79,14 @@ public:
 	virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
 		CefRefPtr<CefFrame> frame,
 		CefProcessId source_process,
-		CefRefPtr<CefProcessMessage> message);
+		CefRefPtr<CefProcessMessage> message) OVERRIDE;
+
+	//CefRequestHandler methods:
+	virtual bool OnBeforeBrowse(CefRefPtr<CefBrowser> browser,
+		CefRefPtr<CefFrame> frame,
+		CefRefPtr<CefRequest> request,
+		bool user_gesture,
+		bool is_redirect) OVERRIDE;
 
 signals:
 	void onReceiveRendererProccessMessasge(QString title, int width, int height);
@@ -87,6 +98,10 @@ private:
 	typedef std::list<CefRefPtr<CefBrowser>> BrowserList;
 	BrowserList browser_list_;
 	bool is_closing_;
+
+	// Handles the browser side of query routing.
+	CefRefPtr<CefMessageRouterBrowserSide> m_message_router;
+	std::unique_ptr<CefMessageRouterBrowserSide::Handler> m_message_handler;
 
 	IMPLEMENT_REFCOUNTING(SimpleHandler);
 };

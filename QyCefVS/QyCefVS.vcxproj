@@ -120,6 +120,7 @@ $(QtDllPath)\windeployqt.exe $(OutputPath)$(TargetFileName)</Command>
     <QtMoc Include="mainwindow.h" />
     <ClCompile Include="cef\simple_app.cc" />
     <ClCompile Include="cef\simple_handler.cc" />
+    <ClCompile Include="cef_query_handler.cpp" />
     <ClCompile Include="mainwindow.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -128,6 +129,7 @@ $(QtDllPath)\windeployqt.exe $(OutputPath)$(TargetFileName)</Command>
     <QtMoc Include="cef\simple_handler.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="cef_query_handler.h" />
     <ClInclude Include="log.h" />
   </ItemGroup>
   <ItemGroup>
