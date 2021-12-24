@@ -91,11 +91,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="app_event_listener_v8_handler.cpp" />
     <ClCompile Include="encrypt\qaesencryption.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="QyAppRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="app_event_listener_v8_handler.h" />
     <ClInclude Include="resource.h" />
     <QtMoc Include="encrypt\qaesencryption.h" />
     <ClInclude Include="log.h" />

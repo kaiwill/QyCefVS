@@ -23,3 +23,5 @@ void SimpleApp::OnBeforeCommandLineProcessing(
 	command_line->AppendSwitch("--disable-web-security");//关闭同源策略
 }
 
+
+

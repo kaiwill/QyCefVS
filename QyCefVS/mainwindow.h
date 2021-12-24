@@ -4,6 +4,8 @@
 #include "ui_mainwindow.h"
 #include "cef/simple_app.h"
 #include "cef_query_handler.h"
+#include <QFileSystemWatcher>
+#include "filesystemwatcher.h"
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
@@ -18,7 +20,6 @@ public:
 
 protected:
 	void resizeEvent(QResizeEvent* event);
-
 private slots:
 	void createBrowserWindow();
 	// 渲染进程发出信号
@@ -29,4 +30,7 @@ private:
 
 	CefQueryHandler* m_cef_query_handler;
 	Ui::MainWindowClass ui;
+
+	FileSystemWatcher* m_FileSystemWatcher;
+
 };

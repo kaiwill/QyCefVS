@@ -17,12 +17,14 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QMetaEnum>
 
 namespace {
 	SimpleHandler* g_instance = nullptr;
 }  // namespace
 
-SimpleHandler::SimpleHandler(bool use_views, CefQueryHandler* cef_query_handler)
+SimpleHandler::SimpleHandler(bool use_views,
+	CefQueryHandler* cef_query_handler)
 	: use_views_(use_views), is_closing_(false) {
 	DCHECK(!g_instance);
 	g_instance = this;
@@ -147,4 +149,36 @@ bool SimpleHandler::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
 
 	return m_message_router->OnProcessMessageReceived(browser, frame,
 		source_process, message);
+}
+
+
+/// <summary>
+/// 文件发生变化槽函数
+/// </summary>
+/// <param name="content"></param>
+void SimpleHandler::onFileChageEventTrigger(FileChangeEvent fileChangeEvent) {
+	std::string notify_message = "FILE_CHAGE_EVENT_TRIGGER_NOTIFY";
+	//创建消息
+	CefRefPtr<CefProcessMessage> msg = CefProcessMessage::Create(notify_message);
+	//枚举转换为字符串
+	QString str = "NEW,REMOVE,UPDATE_FILE,RENAME";
+	QStringList list2 = str.split(",");
+	std::string eventType = list2[fileChangeEvent.fileChangeEventType].toStdString();
+	qDebug() << "=====发送消息给Renderer进程=======event Type:" << QString::fromStdString(eventType);
+	// 发送消息给 Renderer进程
+	CefRefPtr<CefListValue> args = msg->GetArgumentList();
+
+	args->SetSize(2); //2个参数
+	args->SetString(0, eventType); //事件类型
+	args->SetString(1, fileChangeEvent.message.toStdString());//消息内容
+
+
+	// 发送消息给Browser进程
+	// 获取浏览器对象
+	if (browser_list_.empty()) {
+		return;
+	}
+	CefRefPtr<CefFrame> frame = browser_list_.front()->GetMainFrame();
+	// 给Renderer 进程发送消息
+	frame->SendProcessMessage(PID_RENDERER, msg);
 }

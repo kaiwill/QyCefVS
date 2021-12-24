@@ -8,12 +8,17 @@
 #include <QFileDialog>
 #include <QDebug>
 MainWindow::MainWindow(SimpleApp* cefApp, QWidget* parent)
-	: QMainWindow(parent), m_cefApp(cefApp), m_cef_query_handler(new CefQueryHandler)
+	: QMainWindow(parent), m_cefApp(cefApp),
+	m_cef_query_handler(new CefQueryHandler),
+	m_FileSystemWatcher(new FileSystemWatcher(this))
 {
 	ui.setupUi(this);
 	// 当SimpleApp 中回调OnctextInitialized的时候，通知 主窗体创建浏览器窗口，并嵌入到主窗口中
 	connect(m_cefApp, &SimpleApp::onCefOnctextInitialized, this, &MainWindow::createBrowserWindow);
 	ui.mainToolBar->setVisible(false);
+
+	QString watchPath = "E:\\tmp";
+	m_FileSystemWatcher->addWatchPath(watchPath);
 }
 
 /// <summary>
@@ -22,6 +27,8 @@ MainWindow::MainWindow(SimpleApp* cefApp, QWidget* parent)
 void MainWindow::createBrowserWindow() {
 
 	CefRefPtr<SimpleHandler> handler(new SimpleHandler(false, m_cef_query_handler));
+	// 当文件发生变化时，通知到SimpleHandler
+	connect(m_FileSystemWatcher, &FileSystemWatcher::onFileChangeEventTrigger, handler, &SimpleHandler::onFileChageEventTrigger);
 	// 浏览器配置，
 	CefBrowserSettings browser_settings;
 	//browser_settings.universal_access_from_file_urls = STATE_DISABLED;

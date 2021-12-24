@@ -2,17 +2,15 @@ var app;
 if(!app){
 	app={};
     (function(){
-        app.encrypt=function(originText){
-            native function encrypt();
-            return encrypt(originText);
-        };
-        app.decrypt=function(encryptText){
-            native function decrypt();
-            return decrypt(encryptText);
-        };
-        app.sayHello=function(callback) {
-            native function sayHello();
-            return sayHello(callback);
-        };
+		//添加监听器
+        //app.addEventListener=function(eventName,listenerCallbackFun){
+        //    native function addEventListener();
+        //    return addEventListener(eventName,listenerCallbackFun);
+        //};
+		//移除监听器
+        //app.addEventListener=function(eventName,listenerCallbackFun){
+        //    native function addEventListener();
+        //    return addEventListener(eventName,listenerCallbackFun);
+        //};
     })();
 }

@@ -1,15 +1,20 @@
 
 window.onload = () => {
-    console.log(window.cefQuery);
-    $("#btnReadTextFile").click(() => {
-        window.cefQuery({
-            request: 'MSG_READ_TEXT_FILE',
-            onSuccess: function (response) {
-                $("#textFileContent").text(response);
-            },
-            onFailure: function (error_code, error_message) {
-                $("#textFileContent").text("错误:" + error_code + "  " + error_message);
-            }
-        });
-    });
+    console.log(window.app);
+    if (window.app && window.app.addEventListener) {
+
+        function handleFileChangeEvent(data) {
+            // 将结果放入到div中
+            var html = $("#msgContent").html() + "<br />" + data;
+            $("#msgContent").html(html);
+            console.log("=======>" + data);
+        }
+
+        //NEW, REMOVE, UPDATE_FILE, RENAME
+        // 添加监听函数
+        app.addEventListener("NEW", handleFileChangeEvent);
+        app.addEventListener("REMOVE", handleFileChangeEvent);
+        app.addEventListener("UPDATE_FILE", handleFileChangeEvent);
+        app.addEventListener("RENAME", handleFileChangeEvent);
+    }
 }

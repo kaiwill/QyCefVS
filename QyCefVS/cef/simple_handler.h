@@ -11,6 +11,7 @@
 #include "include/wrapper/cef_message_router.h"
 #include "../cef_query_handler.h"
 #include "QObject"
+#include "../filesystemwatcher.h"
 class SimpleHandler :public QObject, public CefClient
 	, public CefLifeSpanHandler
 	, public CefKeyboardHandler
@@ -88,6 +89,10 @@ public:
 		bool user_gesture,
 		bool is_redirect) OVERRIDE;
 
+public slots:
+	// 文件改变后触发
+	void onFileChageEventTrigger(FileChangeEvent fileChangeEvent);
+
 signals:
 	void onReceiveRendererProccessMessasge(QString title, int width, int height);
 
@@ -102,7 +107,6 @@ private:
 	// Handles the browser side of query routing.
 	CefRefPtr<CefMessageRouterBrowserSide> m_message_router;
 	std::unique_ptr<CefMessageRouterBrowserSide::Handler> m_message_handler;
-
 	IMPLEMENT_REFCOUNTING(SimpleHandler);
 };
 
