@@ -28,7 +28,7 @@
     <ClCompile Include="encrypt\qaesencryption.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="app_event_listener_v8_handler.cpp">
+    <ClCompile Include="screencommunicationv8handler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -42,7 +42,10 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="app_event_listener_v8_handler.h">
+    <ClInclude Include="screencommunicationv8handler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="qycefglobal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

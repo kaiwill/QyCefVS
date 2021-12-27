@@ -1,104 +1,88 @@
 ﻿#pragma execution_character_set("UTF-8")
 #include "mainwindow.h"
-#include "cef/simple_handler.h"
+#include "cef/qycefclienthandler.h"
 #include "QDesktopWidget"
 #include "QDockWidget"
 #include <QDialog>
 #include <QDir>
 #include <QFileDialog>
 #include <QDebug>
-MainWindow::MainWindow(SimpleApp* cefApp, QWidget* parent)
-	: QMainWindow(parent), m_cefApp(cefApp),
-	m_cef_query_handler(new CefQueryHandler),
-	m_FileSystemWatcher(new FileSystemWatcher(this))
+
+MainWindow::MainWindow(QyCefAppBrowser* cefApp, QWidget* parent)
+	: QMainWindow(parent), m_cefApp(cefApp)
 {
 	ui.setupUi(this);
-	// 当SimpleApp 中回调OnctextInitialized的时候，通知 主窗体创建浏览器窗口，并嵌入到主窗口中
-	connect(m_cefApp, &SimpleApp::onCefOnctextInitialized, this, &MainWindow::createBrowserWindow);
+	// 当QyCefAppBrowser 中回调OnctextInitialized的时候，通知 主窗体创建浏览器窗口，并嵌入到主窗口中
+	connect(m_cefApp, &QyCefAppBrowser::onCefOnctextInitialized, this, &MainWindow::createBrowserWindow);
 	ui.mainToolBar->setVisible(false);
-
-	QString watchPath = "E:\\tmp";
-	m_FileSystemWatcher->addWatchPath(watchPath);
+	this->activateWindow();//让主窗口处于活动窗口
 }
 
-/// <summary>
-/// 创建浏览器窗体
-/// </summary>
-void MainWindow::createBrowserWindow() {
-
-	CefRefPtr<SimpleHandler> handler(new SimpleHandler(false, m_cef_query_handler));
-	// 当文件发生变化时，通知到SimpleHandler
-	connect(m_FileSystemWatcher, &FileSystemWatcher::onFileChangeEventTrigger, handler, &SimpleHandler::onFileChageEventTrigger);
+// 创建浏览器对象
+bool MainWindow::createBrowser(QString url, QWidget* parentWin) {
+	//获取实例对象
+	CefRefPtr<QyCefClientHandler> handler(QyCefClientHandler::getInstance());
 	// 浏览器配置，
 	CefBrowserSettings browser_settings;
 	//browser_settings.universal_access_from_file_urls = STATE_DISABLED;
-	//运行目录
-	QDir dir = QCoreApplication::applicationDirPath();
-	QString uri = QDir::toNativeSeparators(dir.filePath("resources/index.html"));
-	// 要打开的网址
-	//std::string url = "https://www.baidu.com";
-	std::string url = uri.toStdString();
-	// 浏览器窗口信息
 	CefWindowInfo window_info;
-
-	//window_info.SetAsPopup(NULL, "cefsimple");
-	// 获取嵌入窗体的句柄
-
-
-	CefWindowInfo cefWndInfo;
 	RECT winRect;
-	QRect qtRect = this->rect();
+	QRect qtRect = parentWin->rect();
 	winRect.left = qtRect.left();
 	winRect.top = qtRect.top();
 	winRect.right = qtRect.right();
 	winRect.bottom = qtRect.bottom();
-	HWND wnd = (HWND)centralWidget()->winId();
+	HWND wnd = (HWND)parentWin->winId();
 	window_info.SetAsChild(wnd, winRect);
-	// Create the first browser window.
-	CefBrowserHost::CreateBrowser(window_info, handler, url, browser_settings,
+	// Create the  browser window.
+	return CefBrowserHost::CreateBrowser(window_info, handler, url.toStdString(), browser_settings,
 		nullptr, nullptr);
+}
 
-	connect(handler.get(), &SimpleHandler::onReceiveRendererProccessMessasge, this, &MainWindow::onReceiveRendererProccessMessasge);
-	// 连接 CefQueryHandler中的onReadFile信号
-	connect(m_cef_query_handler, &CefQueryHandler::onReadFile, this, &MainWindow::onReadFile);
+/// <summary>
+/// 创建浏览器窗体,并与QT 窗体集成
+/// </summary>
+void MainWindow::createBrowserWindow() {
+	//运行目录
+	QDir dir = QCoreApplication::applicationDirPath();
+	// 要打开的网址
+	QString uriMaster = QDir::toNativeSeparators(dir.filePath("resources/index.html"));
+	// 创建MasterBrowser
+	createBrowser(uriMaster, this->centralWidget());
+
+	// 操作系统桌面
+	QDesktopWidget* desktop = QApplication::desktop();
+	if (desktop->screenCount() <= 1) {
+		qDebug() << QString("无第二屏幕:%1").arg(desktop->screenCount());
+		return;
+	}
+	QString uriSlaver = QDir::toNativeSeparators(dir.filePath("resources/slaver.html"));
+	m_slaverWin = new SlaverWindow(NULL);
+	m_slaverWin->setGeometry(desktop->screenGeometry(1));
+	// 创建浏览器窗口
+	bool ret = createBrowser(uriSlaver, m_slaverWin);
+	m_slaverWin->show();
+	m_slaverWin->showFullScreen();
+	//qDebug() << QString("SlaverWindow::createBrowserWindow======:%1").arg(ret);
+
 }
 void MainWindow::resizeEvent(QResizeEvent* event)
 {
-	if (SimpleHandler::GetInstance()) {
-		HWND wnd = SimpleHandler::GetInstance()->getBrowserWindowHandle();
+	if (QyCefClientHandler::getInstance()) {
+		HWND wnd = QyCefClientHandler::getInstance()->getMasterBrowserWindowHandle();
 		if (wnd) {
 			QRect qtRect = this->centralWidget()->rect();
 			::MoveWindow(wnd, qtRect.x(), qtRect.y(), qtRect.width(), qtRect.height(), true);
 		}
 	}
 }
-
-void MainWindow::onReceiveRendererProccessMessasge(QString title, int width, int height)
-{
-	/*QDialog* subWin = new QDialog(this);
-	subWin->setWindowTitle(title);
-	subWin->setFixedWidth(width);
-	subWin->setFixedHeight(height);
-	subWin->show();*/
-
-}
-
-//读取文件
-void MainWindow::onReadFile(qint64 query_id) {
-	qDebug() << "mainWindow========onReadFile";
-	QString fileName = QFileDialog::getOpenFileName(NULL, "文件对话框", "F:", "文本文件(*txt)");
-	QFile file(fileName);
-	if (file.exists()) { // 如果文件存在
-		// 读取文件内容
-		if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-			QString content = file.readAll();
-			file.close();
-			//int errorCode, QString fileContent, int64 query_id
-			//成功情况下回传数据，errorCode是 0
-			m_cef_query_handler->handleTextFileContent(0, content, query_id);
-			return;
-		}
+void MainWindow::closeEvent(QCloseEvent* e) {
+	//qDebug() << QString("MainWindow::closeEvent");
+	if (m_slaverWin) {
+		m_slaverWin->hide();
+		m_slaverWin->close();
+		delete m_slaverWin;
 	}
-	//失败情况下回传数据，errorCode是 -1
-	m_cef_query_handler->handleTextFileContent(-1, "读取文件失败", query_id);
+	//释放QyCefClientHandler 实例对象
+	QyCefClientHandler::releaseInstance();
 }

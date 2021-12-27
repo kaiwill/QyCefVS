@@ -40,35 +40,32 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cef\simple_app.cc">
+    <ClCompile Include="cef\qycefappbrowser.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cef\simple_handler.cc">
+    <ClCompile Include="cef\qycefclienthandler.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cef_query_handler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="filesystemwatcher.cpp">
+    <ClCompile Include="slaverwindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="cef\simple_app.h">
+    <QtMoc Include="cef\qycefappbrowser.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="cef\simple_handler.h">
+    <QtMoc Include="cef\qycefclienthandler.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="cef_query_handler.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="filesystemwatcher.h">
+    <QtMoc Include="slaverwindow.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="log.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="qycefglobal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -77,5 +74,10 @@
     <None Include="resources\js\index.js" />
     <None Include="resources\css\index.css" />
     <None Include="resources\js\jquery-3.6.0.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="slaverwindow.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
 </Project>

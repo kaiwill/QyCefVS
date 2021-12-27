@@ -8,10 +8,10 @@
 #include "include/cef_app.h"
 #include "QObject"
 // Implement application-level callbacks for the browser process.
-class SimpleApp : public QObject, public CefApp, public CefBrowserProcessHandler {
+class QyCefAppBrowser : public QObject, public CefApp, public CefBrowserProcessHandler {
 	Q_OBJECT
 public:
-	SimpleApp();
+	QyCefAppBrowser();
 
 	// CefApp methods:
 	CefRefPtr<CefBrowserProcessHandler> GetBrowserProcessHandler() OVERRIDE {
@@ -29,7 +29,7 @@ signals:
 
 private:
 	// Include the default reference counting implementation.
-	IMPLEMENT_REFCOUNTING(SimpleApp);
+	IMPLEMENT_REFCOUNTING(QyCefAppBrowser);
 };
 
 #endif  // CEF_TESTS_CEFSIMPLE_SIMPLE_APP_H_

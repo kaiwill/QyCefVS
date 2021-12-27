@@ -1,11 +1,7 @@
 ﻿#pragma once
 #include <qobject.h>
 #include "include/cef_app.h"
-
-// 引入消息路由组件
-#include "include/wrapper/cef_message_router.h"
-
-#include "app_event_listener_v8_handler.h"
+#include "screencommunicationv8handler.h"
 class QyAppRenderer :public CefApp, public CefRenderProcessHandler {
 public:
 	QyAppRenderer();
@@ -31,13 +27,8 @@ public:
 		CefRefPtr<CefProcessMessage> message);
 
 private:
-	// 消息路由对象
-	CefRefPtr<CefMessageRouterRendererSide> m_message_router;
-	// 浏览器
-	CefRefPtr<CefBrowser> m_mainBrowser;
-	AppEventListenerV8Handler* m_appEventListenerV8Handler;
+	ScreenCommunicationV8Handler* mScreenCommunicationV8Handler = NULL;
 	// Include the default reference counting implementation.
-
 
 	IMPLEMENT_REFCOUNTING(QyAppRenderer);
 };

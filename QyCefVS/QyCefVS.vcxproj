@@ -115,23 +115,23 @@ $(QtDllPath)\windeployqt.exe $(OutputPath)$(TargetFileName)</Command>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="slaverwindow.cpp" />
     <QtRcc Include="mainwindow.qrc" />
     <QtUic Include="mainwindow.ui" />
     <QtMoc Include="mainwindow.h" />
-    <ClCompile Include="cef\simple_app.cc" />
-    <ClCompile Include="cef\simple_handler.cc" />
-    <ClCompile Include="cef_query_handler.cpp" />
-    <ClCompile Include="filesystemwatcher.cpp" />
+    <ClCompile Include="cef\qycefappbrowser.cc" />
+    <ClCompile Include="cef\qycefclienthandler.cc" />
     <ClCompile Include="mainwindow.cpp" />
     <ClCompile Include="main.cpp" />
+    <QtUic Include="slaverwindow.ui" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="cef\simple_app.h" />
-    <QtMoc Include="cef\simple_handler.h" />
+    <QtMoc Include="cef\qycefappbrowser.h" />
+    <QtMoc Include="cef\qycefclienthandler.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="cef_query_handler.h" />
-    <QtMoc Include="filesystemwatcher.h" />
+    <ClInclude Include="qycefglobal.h" />
+    <QtMoc Include="slaverwindow.h" />
     <ClInclude Include="log.h" />
   </ItemGroup>
   <ItemGroup>

@@ -2,7 +2,7 @@
 #include <QtWidgets/QApplication>
 #include "include/cef_command_line.h"
 #include "include/cef_sandbox_win.h"
-#include "cef/simple_app.h"
+#include "cef/qycefappbrowser.h"
 #include <qdebug.h>
 #include "log.h"
 int main(int argc, char* argv[])
@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
 	HINSTANCE hInstance = GetModuleHandle(nullptr);
 
 	// 开启 QT 消息循环
-	SimpleApp* cefApp = new SimpleApp;
+	QyCefAppBrowser* cefApp = new QyCefAppBrowser;
 	QApplication a(argc, argv);
 	qInstallMessageHandler(outputMessage); // 日志
 	//CEF 命令行参数
@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 
 	MainWindow w(cefApp, nullptr);
 	w.show();
-	CefRefPtr<SimpleApp> app(cefApp);
+	CefRefPtr<QyCefAppBrowser> app(cefApp);
 	// 初始化CEF
 	CefInitialize(main_args, settings, app.get(), nullptr);
 	int ret = a.exec();

@@ -91,14 +91,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="app_event_listener_v8_handler.cpp" />
     <ClCompile Include="encrypt\qaesencryption.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="QyAppRenderer.cpp" />
+    <ClCompile Include="screencommunicationv8handler.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="app_event_listener_v8_handler.h" />
+    <ClInclude Include="qycefglobal.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="screencommunicationv8handler.h" />
     <QtMoc Include="encrypt\qaesencryption.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="QyAppRenderer.h" />
