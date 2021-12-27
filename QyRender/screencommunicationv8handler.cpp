@@ -59,18 +59,9 @@ void ScreenCommunicationV8Handler::handleMaster(const CefString& name,
 	// 发送消息
 	context->GetFrame()->SendProcessMessage(PID_RENDERER, msg);
 
-	//转换
-	//CefRefPtr<CefValue> jsonObject = CefParseJSON(strFunc, JSON_PARSER_ALLOW_TRAILING_COMMAS);
-	//if (mCallBackMap.contains(name)) {
-	//	JavaScriptCallBack callback = mCallBackMap[name];
-	//	// 进入Contxt
-	//	callback.context->Enter();
-	//	callback.callbackFun->ExecuteFunction(NULL, arguments);
-	//	callback.context->Exit();
-	//}
 }
 
-// 处理 onReceiveData
+// 注册 JavaScript函数，保存回调函数
 void ScreenCommunicationV8Handler::handleSlaver(const CefString& name,
 	const CefV8ValueList& arguments,
 	CefRefPtr<CefV8Value>& retval,

@@ -105,13 +105,15 @@ bool QyCefClientHandler::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
 	CefRefPtr<CefFrame> frame,
 	CefProcessId source_process,
 	CefRefPtr<CefProcessMessage> message) {
-
-	// 使用slaver browser对象转发消息
-	if (slaverBrowser.get()) {
-		slaverBrowser->GetMainFrame()->SendProcessMessage(PID_RENDERER, message);
-		return true;
+	CefString messageName = message->GetName();
+	std::string msgName = messageName;
+	if (Share::PROCESS_MESSAGE_TO_SLAVER_SCREEN == msgName) {
+		// 使用slaver browser对象转发消息
+		if (slaverBrowser.get()) {
+			slaverBrowser->GetMainFrame()->SendProcessMessage(PID_RENDERER, message);
+			return true;
+		}
 	}
-
 	return false;
 }
 
